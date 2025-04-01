@@ -43,11 +43,103 @@ static Node* createNode(const char* word){
 
 // * to do
 static Node* rightRotate(Node* node) {
-    
+    if (!node || !node->left) return node;
+
+    Node* Lchild = node->left;
+    Node* Rsubtree_of_Lchild = Lchild->right;
+
+    Lchild->right = node;
+    node->left = Rsubtree_of_Lchild;
+
+    node->height = 1 + max(height(node->left), height(node->right));
+    Lchild->height = 1 + max(height(Lchild->left), height(Lchild->right));
+
+    return Lchild;
 }
+
 // * to do
 static Node* leftRotate(Node* node) {
+    if (!node || !node->right) return node;
 
+    Node* Rchild = node->right;
+    Node* Lsubtree_of_Rchild = Rchild->left;
+
+    Rchild->left = node;
+    node->right = Lsubtree_of_Rchild;
+
+    node->height = 1 + max(height(node->left), height(node->right));
+    Rchild->height = 1 + max(height(Rchild->left), height(Rchild->right));
+
+    return Rchild;
 }
 
 
+Node* insertNode(Node* node, const char* word){
+    // base case, since this is a recursive approuch
+    if (!node) return createNode(word);
+    //?falls here
+
+    //! compare banana and cherry ok 
+    //? now it compares banana with orange, and gets comparasion > 0
+    //? compare again (cherry with orange), and gets comparasion > 0
+    int comparasion = strcomp(word, node->word);
+    /*  
+            the strcomp() func. above takes two string arguments, compares the two strings in lexicographical order, and then returns a integer value:
+        •	negative -> if str1 comes before str2 in lexicographical order.
+        •	zero -> if str1 and str2 are equal.
+        •	positive -> if f str1 comes after str2.
+    */
+            
+    //standard bst insert
+    if (comparasion > 0){
+        node->right = insertNode(node->right, word); //? so it falls here / falls here again
+    } 
+    else if (comparasion < 0){
+        node->left = insertNode(node->left, word);
+    } 
+    else {
+        return node;
+    }
+    // ? calculate banana height (1+2) = 3
+    node->height = 1 + max(height(node->left), height(node->right)); //! banana height was 1, now is 2 (1+1)
+
+    int balance = getBalance(node); //! bf for banana -> -1 / bf for cherry is / banna height = 0-2 =-2
+    // 4. If unbalanced, handle the four cases:
+    
+   
+    /* 
+        argument explanation for LL case: 
+        •  bf is greater than 1 ? (meaning that the node has at least a left imbalance), but it can also be a LR at this point, so need to check the condition bellow
+        •  strcmp(LAST_INSERTED_WORD, LEFT_CHILD_WORD) is less than 0? (it confirms that node has a leftChild that has a left child too) so, it is a left imbalance for sure
+    */
+    // Left Left Case (LEFT IMBALANCE)
+    if (balance > 1 && strcmp(word, node->left->word) < 0)
+        return rightRotate(node);
+    
+    // Right Right Case (RIGHT IMBALANCE) 
+    if (balance < -1 && strcmp(word, node->right->word) > 0) //falls here compare orange with cherry and gets +1 
+        return leftRotate(node);
+    
+   
+    /* 
+        argument explanation for LR case:
+        •  bf is greater than 1 ? (meaning that the node has at least a left imbalance)
+        •   strcmp(LAST_INSERTED_WORD, LEFT_CHILD_WORD) is greater than 0? meaning that the node has a left child that has a right child, so: LR case for sure
+
+    */
+    // Left Right Case
+    if (balance > 1 && strcmp(word, node->left->word) > 0) {
+        node->left = leftRotate(node->left);
+        return rightRotate(node);
+    }
+    
+    // Right Left Case
+    if (balance < -1 && strcmp(word, node->right->word) < 0) {
+        node->right = rightRotate(node->right);
+        return leftRotate(node);
+    }
+
+    // ! so it just returns node
+    return node;
+
+}
