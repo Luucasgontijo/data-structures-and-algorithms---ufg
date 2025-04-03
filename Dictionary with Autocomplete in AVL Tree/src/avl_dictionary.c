@@ -1,13 +1,14 @@
-#include <avl_dictionary.h>
+#include "avl_dictionary.h"
 #include "utils.h"
 
 ////height
 ////max
 ////getbalance
 ////createnode
-// !rightrotate
-// !leftrotate
-// !insertNode
+//// rightrotate
+//// leftrotate
+//// insertNode
+//! validade word
 
 // retrive the height of a node. handle null nodes as well
 static int height(Node* node){
@@ -41,7 +42,7 @@ static Node* createNode(const char* word){
 }
 
 
-// * to do
+
 static Node* rightRotate(Node* node) {
     if (!node || !node->left) return node;
 
@@ -57,7 +58,7 @@ static Node* rightRotate(Node* node) {
     return Lchild;
 }
 
-// * to do
+
 static Node* leftRotate(Node* node) {
     if (!node || !node->right) return node;
 
@@ -82,9 +83,9 @@ Node* insertNode(Node* node, const char* word){
     //! compare banana and cherry ok 
     //? now it compares banana with orange, and gets comparasion > 0
     //? compare again (cherry with orange), and gets comparasion > 0
-    int comparasion = strcomp(word, node->word);
+    int comparasion = strcmp(word, node->word);
     /*  
-            the strcomp() func. above takes two string arguments, compares the two strings in lexicographical order, and then returns a integer value:
+            the strcmp() func. above takes two string arguments, compares the two strings in lexicographical order, and then returns a integer value:
         •	negative -> if str1 comes before str2 in lexicographical order.
         •	zero -> if str1 and str2 are equal.
         •	positive -> if f str1 comes after str2.
@@ -143,3 +144,49 @@ Node* insertNode(Node* node, const char* word){
     return node;
 
 }
+
+
+// Find all words with a given prefix
+void collectWordsWithPrefix(Node* root, const char* prefix, char** results, int* count, int maxResults) {
+    if (!root || *count >= maxResults) return;
+    
+    // Traverse left subtree first (keep alphabetical order)
+    collectWordsWithPrefix(root->left, prefix, results, count, maxResults);
+    
+    // Check if current node's word has the prefix
+    if (startsWith(root->word, prefix)) {
+        // Add this word to results
+        results[*count] = strdup(root->word);
+        (*count)++;
+    }
+    
+    // Only traverse right subtree if we haven't filled results yet
+    if (*count < maxResults) {
+        collectWordsWithPrefix(root->right, prefix, results, count, maxResults);
+    }
+}
+
+
+char** searchByPrefix(Node* root, const char* prefix, int* resultCount, int maxResults) {
+    if (!root || !prefix) { // conditional for escaping the case where either root or prefix are NULL
+        *resultCount = 0; 
+        return NULL;
+    }
+    
+    // Allocate memory for results
+    char** results = (char**)malloc(maxResults * sizeof(char*));
+    
+    if (!results) {
+        *resultCount = 0;
+        return NULL;
+    }
+    
+    // Initialize count
+    *resultCount = 0;
+    
+    // Collect words with prefix
+    collectWordsWithPrefix(root, prefix, results, resultCount, maxResults);
+    
+    return results;
+}
+

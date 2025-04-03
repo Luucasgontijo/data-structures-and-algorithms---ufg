@@ -1,18 +1,25 @@
 CC = gcc
-CFLAGS = -Iinclude -Wall -Wextra
-SRC = src/main.c src/utils.c src/module1.c
-OBJ = $(SRC:.c=.o)
-TARGET = my_c_project
+CFLAGS = -Wall -Wextra -g
+SRC_DIR = src
+OBJ_DIR = obj
+BIN_DIR = bin
 
-all: $(TARGET)
+SRCS = $(wildcard $(SRC_DIR)/*.c)
+OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
+EXECUTABLE = $(BIN_DIR)/dictionary_avl
 
-$(TARGET): $(OBJ)
-	$(CC) -o $@ $^
+all: directories $(EXECUTABLE)
 
-%.o: %.c
+directories:
+	mkdir -p $(OBJ_DIR) $(BIN_DIR)
+
+$(EXECUTABLE): $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $^
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJ) $(TARGET)
+	rm -rf $(OBJ_DIR) $(BIN_DIR)
 
-.PHONY: all clean
+.PHONY: all clean directories
