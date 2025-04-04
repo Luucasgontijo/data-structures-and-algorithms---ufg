@@ -145,37 +145,54 @@ Node* insertNode(Node* node, const char* word){
 
 }
 
-
-// Find all words with a given prefix
-void collectWordsWithPrefix(Node* root, const char* prefix, char** results, int* count, int maxResults) {
-    if (!root || *count >= maxResults) return;
+static Node* findPrefixSubtree(Node* root, const char* prefix) {
+    if (!root) return NULL;
     
-    // Traverse left subtree first (keep alphabetical order)
-    collectWordsWithPrefix(root->left, prefix, results, count, maxResults);
+    int cmp = strncasecmp(prefix, root->word, strlen(prefix));
     
-    // Check if current node's word has the prefix
-    if (startsWith(root->word, prefix)) {
-        // Add this word to results
-        results[*count] = strdup(root->word);
-        (*count)++;
-    }
-    
-    // Only traverse right subtree if we haven't filled results yet
-    if (*count < maxResults) {
-        collectWordsWithPrefix(root->right, prefix, results, count, maxResults);
+    if (cmp == 0) {
+        // Current node starts with prefix - this is our subtree root
+        return root;
+    } else if (cmp < 0) {
+        // Prefix is lexicographically smaller, go left
+        return findPrefixSubtree(root->left, prefix);
+    } else {
+        // Prefix is lexicographically larger, go right
+        return findPrefixSubtree(root->right, prefix);
     }
 }
 
+// Collect words from a subtree that match the prefix
+static void collectMatchingWords(Node* node, const char* prefix, char** results, int* count, int maxResults) {
+    if (!node || *count >= maxResults) return;
+    
+    // Check left subtree (smaller words)
+    collectMatchingWords(node->left, prefix, results, count, maxResults);
+    
+    // Check current node
+    if (startsWith(node->word, prefix)) {
+        results[*count] = strdup(node->word);
+        (*count)++;
+    } else if (strcmp(node->word, prefix) > 0 && !startsWith(prefix, node->word)) {
+        // If current word is greater than prefix but doesn't share the prefix,
+        // we don't need to check right subtree if we're looking for exact prefix
+        return;
+    }
+    
+    // Check right subtree (larger words)
+    if (*count < maxResults) {
+        collectMatchingWords(node->right, prefix, results, count, maxResults);
+    }
+}
 
 char** searchByPrefix(Node* root, const char* prefix, int* resultCount, int maxResults) {
-    if (!root || !prefix) { // conditional for escaping the case where either root or prefix are NULL
-        *resultCount = 0; 
+    if (!root || !prefix) {
+        *resultCount = 0;
         return NULL;
     }
     
     // Allocate memory for results
     char** results = (char**)malloc(maxResults * sizeof(char*));
-    
     if (!results) {
         *resultCount = 0;
         return NULL;
@@ -184,9 +201,11 @@ char** searchByPrefix(Node* root, const char* prefix, int* resultCount, int maxR
     // Initialize count
     *resultCount = 0;
     
-    // Collect words with prefix
-    collectWordsWithPrefix(root, prefix, results, resultCount, maxResults);
+    // Find the subtree that might contain our prefix
+    Node* prefixSubtree = findPrefixSubtree(root, prefix);
+    
+    // Collect matching words from that subtree
+    collectMatchingWords(prefixSubtree, prefix, results, resultCount, maxResults);
     
     return results;
 }
-

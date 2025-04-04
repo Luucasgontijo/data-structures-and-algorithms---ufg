@@ -33,20 +33,10 @@ This will compile the source files and create the executable.
 After building the project, you can run the application using:
 
 ```
-./my-c-project
+gcc -I include src/*.c -o main
+./main
 ```
 
-## Testing
-To run the tests, you can use the following command:
-
-```
-make test
-```
-
-Ensure that you have the necessary testing framework installed.
-
-## Contributing
-Feel free to fork the repository and submit pull requests for any improvements or bug fixes.
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for more details.
