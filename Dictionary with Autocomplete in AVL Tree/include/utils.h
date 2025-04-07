@@ -9,6 +9,7 @@
 #include "utils.h"
 #include "avl_dictionary.h"
 
+char* strlwr(char* str);
 
 int startsWith(const char* str, const char* prefix);
 Node* loadDictionaryFromFile(const char* filename);

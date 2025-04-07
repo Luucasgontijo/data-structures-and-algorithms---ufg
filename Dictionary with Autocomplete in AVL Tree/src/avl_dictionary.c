@@ -1,14 +1,6 @@
 #include "avl_dictionary.h"
 #include "utils.h"
 
-////height
-////max
-////getbalance
-////createnode
-//// rightrotate
-//// leftrotate
-//// insertNode
-//! validade word
 
 // retrive the height of a node. handle null nodes as well
 static int height(Node* node){
@@ -32,11 +24,10 @@ static Node* createNode(const char* word){
     Node* node = (Node*)malloc(sizeof(Node));
 
     node->word = strdup(word); 
-    // ! there is  a need to explain the use of strdup above: why not to just make node->word equal to word? 
+    
     
     node->left = node->right = NULL;
     node->height = 1;
-    // ! why i choosed to use 1 as height?
 
     return node;
 }
@@ -78,11 +69,7 @@ static Node* leftRotate(Node* node) {
 Node* insertNode(Node* node, const char* word){
     // base case, since this is a recursive approuch
     if (!node) return createNode(word);
-    //?falls here
 
-    //! compare banana and cherry ok 
-    //? now it compares banana with orange, and gets comparasion > 0
-    //? compare again (cherry with orange), and gets comparasion > 0
     int comparasion = strcmp(word, node->word);
     /*  
             the strcmp() func. above takes two string arguments, compares the two strings in lexicographical order, and then returns a integer value:
@@ -93,7 +80,7 @@ Node* insertNode(Node* node, const char* word){
             
     //standard bst insert
     if (comparasion > 0){
-        node->right = insertNode(node->right, word); //? so it falls here / falls here again
+        node->right = insertNode(node->right, word); 
     } 
     else if (comparasion < 0){
         node->left = insertNode(node->left, word);
@@ -102,9 +89,9 @@ Node* insertNode(Node* node, const char* word){
         return node;
     }
     // ? calculate banana height (1+2) = 3
-    node->height = 1 + max(height(node->left), height(node->right)); //! banana height was 1, now is 2 (1+1)
+    node->height = 1 + max(height(node->left), height(node->right));
 
-    int balance = getBalance(node); //! bf for banana -> -1 / bf for cherry is / banna height = 0-2 =-2
+    int balance = getBalance(node); 
     // 4. If unbalanced, handle the four cases:
     
    
@@ -140,14 +127,16 @@ Node* insertNode(Node* node, const char* word){
         return leftRotate(node);
     }
 
-    // ! so it just returns node
+
     return node;
 
 }
 
+//created this to find the subtree that contains the prefix we are searching for
 static Node* findPrefixSubtree(Node* root, const char* prefix) {
     if (!root) return NULL;
-    
+
+    // strlwr(prefix);
     int cmp = strncasecmp(prefix, root->word, strlen(prefix));
     
     if (cmp == 0) {
@@ -172,6 +161,10 @@ static void collectMatchingWords(Node* node, const char* prefix, char** results,
     // Check current node
     if (startsWith(node->word, prefix)) {
         results[*count] = strdup(node->word);
+        if (!results[*count]) {
+            // Handle memory allocation failure
+            return;
+        }
         (*count)++;
     } else if (strcmp(node->word, prefix) > 0 && !startsWith(prefix, node->word)) {
         // If current word is greater than prefix but doesn't share the prefix,
@@ -186,6 +179,7 @@ static void collectMatchingWords(Node* node, const char* prefix, char** results,
 }
 
 char** searchByPrefix(Node* root, const char* prefix, int* resultCount, int maxResults) {
+
     if (!root || !prefix) {
         *resultCount = 0;
         return NULL;

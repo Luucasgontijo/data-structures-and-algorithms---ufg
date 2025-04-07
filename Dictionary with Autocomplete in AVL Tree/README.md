@@ -59,3 +59,24 @@ The program properly manages memory, freeing all allocated resources before term
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for more details.
+
+
+
+
+
+
+// void freeAVLTree(Node* root) {
+//     if (root == NULL) {
+//         return;
+//     }
+    
+//     // Recursively free left and right subtrees (post-order traversal)
+//     freeAVLTree(root->left);
+//     freeAVLTree(root->right);
+    
+//     // Free the word if it was dynamically allocated
+//     free(root->word);
+    
+//     // Free the node itself
+    
+// }

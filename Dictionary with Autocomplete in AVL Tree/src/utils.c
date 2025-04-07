@@ -15,6 +15,16 @@ int startsWith(const char* str, const char* prefix) {
     return strncasecmp(str, prefix, prefixLen) == 0;
 }
 
+
+char* strlwr(char* str) {
+    char* p = str;
+    while (*p) {
+        *p = tolower((unsigned char)*p);
+        p++;
+    }
+    return str;
+}
+
 Node* loadDictionaryFromFile(const char* filename) {
     int wordCount = 0;
     char filepath[512];

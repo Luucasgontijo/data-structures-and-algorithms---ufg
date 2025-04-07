@@ -1,5 +1,6 @@
 #include "avl_dictionary.h"
 #include "utils.h"
+#include "memory_utils.h"
 
 int countNodes(Node* root) {
     if (!root) return 0;
@@ -18,21 +19,7 @@ void inorderTraversal(Node* root) {
     }
 }
 
-void freeAVLTree(Node* root) {
-    if (root == NULL) {
-        return;
-    }
-    
-    // Recursively free left and right subtrees (post-order traversal)
-    freeAVLTree(root->left);
-    freeAVLTree(root->right);
-    
-    // Free the word if it was dynamically allocated
-    free(root->word);
-    
-    // Free the node itself
-    free(root);
-}
+
 
 int main() {
     // Start with empty tree
@@ -75,7 +62,8 @@ int main() {
         }
         
         // Copy to prefix variable
-        strcpy(prefix, input);
+        strcpy(prefix, strlwr(input));
+        // i used strlwr function that i created in utils file to get input string to lower case
         
         // Check for exit command
         if (strcasecmp(prefix, "exit") == 0) { 
@@ -99,14 +87,14 @@ int main() {
             printf("Suggestions starting with '%s':\n", prefix);
             for (int i = 0; i < resultCount; i++) {
                 printf("%d. %s\n", i+1, results[i]);
-                free(results[i]);  // Libera cada string individual
+                free(results[i]);  // i am freeing the memory here because i alredy am iterating over results count to print each one, so why not
             }
             free(results);  // Libera o array de ponteiros
         }
         
     }
 
-    freeAVLTree(root);
+    freeTree(root);
     printf("Memory freed successfully\n");
     
     return 0;
