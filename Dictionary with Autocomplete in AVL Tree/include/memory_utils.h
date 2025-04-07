@@ -5,6 +5,6 @@
 #include "avl_dictionary.h"  // needed for Node* type
 
 void freeTree(Node* root);
-static void freeNode(Node* node);
+void freeNode(Node* node);
 void freeSearchResults(char** results, int count);
 #endif

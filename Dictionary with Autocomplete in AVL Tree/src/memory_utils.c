@@ -3,7 +3,7 @@
 #include "memory_utils.h"
 
 // Free a single node
-static void freeNode(Node* node) {
+void freeNode(Node* node) {
     if (node) {
         free(node->word);
         free(node);

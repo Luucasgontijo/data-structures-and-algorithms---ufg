@@ -25,10 +25,10 @@ typedef struct {
 // In avl_dictionary.h
 void collectWordsWithPrefix(Node* root, const char* prefix, char** results, int* count, int maxResults);
 char** searchByPrefix(Node* root, const char* prefix, int* resultCount, int maxResults);
-static int getHeight(Node* node);
-static int getBalance(Node* node);
-static Node* rightRotate(Node* y);
-static Node* leftRotate(Node* x);
+int getHeight(Node* node);
+int getBalance(Node* node);
+Node* rightRotate(Node* y);
+Node* leftRotate(Node* x);
 Node* insertNode(Node* node, const char* word);
 // In avl_dictionary.h
 void freeAVLTree(Node* root);

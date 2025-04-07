@@ -3,24 +3,24 @@
 
 
 // retrive the height of a node. handle null nodes as well
-static int height(Node* node){
+int height(Node* node){
     if (!node) return 0;
     return node->height;
 }
 
 // this simply gets the max between two integers
-static int max(int a, int b){
+int max(int a, int b){
     return (a > b) ? a : b;
 }
 
 // for calculating the BF (balancing factor of a node)
-static int getBalance(Node* node){
+int getBalance(Node* node){
     if (!node) return 0;
     return height(node->left) - height(node->right);
 }
 
 //this function handles the creation of a new Node 
-static Node* createNode(const char* word){
+Node* createNode(const char* word){
     Node* node = (Node*)malloc(sizeof(Node));
 
     node->word = strdup(word); 
@@ -34,7 +34,7 @@ static Node* createNode(const char* word){
 
 
 
-static Node* rightRotate(Node* node) {
+Node* rightRotate(Node* node) {
     if (!node || !node->left) return node;
 
     Node* Lchild = node->left;
@@ -50,7 +50,7 @@ static Node* rightRotate(Node* node) {
 }
 
 
-static Node* leftRotate(Node* node) {
+Node* leftRotate(Node* node) {
     if (!node || !node->right) return node;
 
     Node* Rchild = node->right;
@@ -133,7 +133,7 @@ Node* insertNode(Node* node, const char* word){
 }
 
 //created this to find the subtree that contains the prefix we are searching for
-static Node* findPrefixSubtree(Node* root, const char* prefix) {
+Node* findPrefixSubtree(Node* root, const char* prefix) {
     if (!root) return NULL;
 
     // strlwr(prefix);
@@ -152,7 +152,7 @@ static Node* findPrefixSubtree(Node* root, const char* prefix) {
 }
 
 // Collect words from a subtree that match the prefix
-static void collectMatchingWords(Node* node, const char* prefix, char** results, int* count, int maxResults) {
+void collectMatchingWords(Node* node, const char* prefix, char** results, int* count, int maxResults) {
     if (!node || *count >= maxResults) return;
     
     // Check left subtree (smaller words)

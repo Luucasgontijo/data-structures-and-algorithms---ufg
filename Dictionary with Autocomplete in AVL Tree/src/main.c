@@ -34,11 +34,10 @@ int main() {
 
     
     char prefix[100];// Interactive prefix search (limited to 100 chars, what i believe to be a 'good' amount)
-    int running = 1; //since it needs to have an interactive interface, i defined this variable running, for control purposes of when the user wants to use the "exit" word to exit or search an prefix
     
     int maxResults = 10000; // i initially set up this var to 10k to be in accordance with 'RNF2 - Escalabilidade' though when this is a lower number, lower memory space is reserved the results variable  
 
-    while (running) {
+    while (1) {
         printf("\nEnter a prefix to search (or 'exit' to quit): ");
     
         // i used fgets instead of scanf to properly handle empty input
@@ -67,8 +66,7 @@ int main() {
         
         // Check for exit command
         if (strcasecmp(prefix, "exit") == 0) { 
-            running = 0;
-            continue;
+            break;
         }
         
         // Optional: warning for short prefixes (since i am mocking this with 10k words, short prefixes may result in many results)
