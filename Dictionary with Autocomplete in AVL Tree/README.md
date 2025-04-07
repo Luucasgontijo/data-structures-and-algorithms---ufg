@@ -48,12 +48,18 @@ mkdir -p bin
 gcc -Wall -g -I./include ./src/avl_dictionary.c ./src/main.c ./src/memory_utils.c ./src/utils.c -o ./bin/dictionary_avl
 ```
 
+
 ## Running the Application
 After compilation, run the program:
-
 ```bash
 ./bin/dictionary_avl
 ```
+
+## Additional: run with compile_and_run.bat
+
+For WindowsOS open the .bat file in the root directory.
+
+
 
 ## Usage
 1. The program loads a dictionary of words from words.txt
