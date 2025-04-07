@@ -59,6 +59,21 @@ After compilation, run the program:
 
 For WindowsOS open the .bat file in the root directory.
 
+## Additional: run with docker
+
+#### Step 1: Build the Docker image
+In your terminal, navigate to your project directory and run:
+```bash
+docker build -t dictionary-avl .
+```
+this build the image contained in Dockerfile
+
+### Step 3: Run the container
+```bash
+docker run -it dictionary-avl
+```
+The -it flags ensure you get an interactive terminal session which is necessary for the program to accept user input.
+
 
 
 ## Usage
