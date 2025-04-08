@@ -1,3 +1,5 @@
+// LUCAS GONTIJO DE MORAES_202403082
+
 #include "avl_dictionary.h"
 #include "utils.h"
 #include "memory_utils.h"
@@ -6,19 +8,6 @@ int countNodes(Node* root) {
     if (!root) return 0;
     return 1 + countNodes(root->left) + countNodes(root->right);
 }
-
-// In main after loading
-
-
-// Simple traversal function to display the tree
-void inorderTraversal(Node* root) {
-    if (root != NULL) {
-        inorderTraversal(root->left);
-        printf("%s\n", root->word);
-        inorderTraversal(root->right);
-    }
-}
-
 
 
 int main() {
@@ -40,7 +29,7 @@ int main() {
     while (1) {
         printf("\nEnter a prefix to search (or 'exit' to quit): ");
     
-        // i used fgets instead of scanf to properly handle empty input
+        //i used fgets instead of scanf to properly handle empty inputs
         char input[100];
         if (fgets(input, sizeof(input), stdin) == NULL) {
             printf("Error reading input. Please try again.\n");
@@ -53,9 +42,15 @@ int main() {
             input[len-1] = '\0';
             len--;
         }
-        
-        // Check for empty input
-        if (len == 0) {
+
+        // Trim leading and trailing whitespace
+        char *trimmed = input;
+        while (*trimmed && isspace((unsigned char)*trimmed)) {
+            trimmed++;
+        }
+
+        // Check if the trimmed string is empty
+        if (*trimmed == '\0') {
             printf("Error: Empty input is not allowed. Please enter a valid prefix.\n");
             continue;
         }
@@ -89,9 +84,8 @@ int main() {
             }
             free(results);  // Libera o array de ponteiros
         }
-        
     }
-
+    
     freeTree(root);
     printf("Memory freed successfully\n");
     
